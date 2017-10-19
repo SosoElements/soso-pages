@@ -1,0 +1,259 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<dom-module id="soso-pages">
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: relative;
+        overflow: hidden;
+      }
+
+      ::slotted(*) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 0;
+        min-height: 100%;
+        box-sizing: border-box;
+        transition-timing-function: ease;
+        transition-property: transform, opacity;
+      }
+
+      ::slotted(.hidden) {
+        display: none;
+      }
+
+      ::slotted(.animating-in) {
+        z-index: 1;
+      }
+    </style>
+    <slot id="slot" on-slotchange="_setPage"></slot>
+  </template>
+  <script>
+    class SosoPages extends Polymer.Element {
+      static get is() { return 'soso-pages'; }
+      static get properties() {
+        return {
+          selected: String,
+          selectedIndex: {
+            type: Number,
+            value: 0,
+            observer: '_setPage'
+          },
+          duration: {
+            type: Number,
+            value: 600
+          },
+          animation: {
+            type: String,
+            value: "none"
+          }
+        };
+      }
+
+      _setPage() {
+        const pages = this.$.slot.assignedNodes({ flatten: true }).filter(n => n.nodeType === Node.ELEMENT_NODE);
+        for (let p of pages) {
+          if (p != this._currentPage) {
+            p.classList.add("hidden");
+          }
+        }
+        let index = this.selectedIndex || 0;
+        index = Math.min(Math.max(index, 0), pages.length - 1);
+        if (this._animating) {
+          this._stopAnimation();
+        }
+        let dstPage = pages[index];
+        if (dstPage == this._currentPage) {
+          // nothing to do
+          return;
+        }
+        dstPage.classList.remove("hidden");
+        let srcPage = this._currentPage;
+        this._currentPage = dstPage;
+        if (!srcPage) {
+          // No animation
+          return;
+        }
+        this._startAnimating(srcPage, dstPage);
+      }
+
+      _startAnimating(srcPage, dstPage) {
+        document.body.style.overflow = "hidden";
+        this._srcPage = srcPage;
+        this._dstPage = dstPage;
+        this._dstPage.style.zIndex = 1;
+        this._srcPage.style.transitionDuration = this.duration + "ms";
+        this._dstPage.style.transitionDuration = this.duration + "ms";
+        this._dstPage.style.transform = "none";
+        this._srcPage.style.transform = "none";
+        this._dstPage.style.opacity = 1;
+        this._srcPage.style.opacity = 1;
+        this._animating = true;
+        this._animate();
+      }
+
+      _stopAnimation() {
+        this._animating = true;
+        this._dstPage.style.zIndex = 0;
+        this._srcPage.classList.add("hidden");
+        this._dstPage.style.transform = "none";
+        this._srcPage.style.transform = "none";
+        this._dstPage.style.opacity = 1;
+        this._srcPage.style.opacity = 1;
+        setTimeout(() => {
+          if (!this._animating) {
+            document.body.style.overflow = "";
+          }
+        });
+      }
+
+      _animate() {
+        var src = this._srcPage;
+        var dst = this._dstPage;
+        switch (this.animation) {
+          case "zoom-in":
+            this._dstPage.style.transform = "scale(3)";
+            this._dstPage.style.opacity = 0.5;
+            setTimeout(() => {
+              this._dstPage.style.transform = "none";
+              this._dstPage.style.opacity = 1;
+              setTimeout(() => {
+                if (dst == this._dstPage) {
+                  this._stopAnimation();
+                }
+              }, this.duration);
+            }, 80);
+            break;
+          case "zoom-out":
+            this._dstPage.style.transform = "scale(0)";
+            this._dstPage.style.opacity = 0.1;
+            setTimeout(() => {
+              this._dstPage.style.transform = "none";
+              this._dstPage.style.opacity = 1;
+              setTimeout(() => {
+                if (dst == this._dstPage) {
+                  this._stopAnimation();
+                }
+              }, this.duration);
+            }, 80);
+            break;
+          case "dissolve":
+            this._dstPage.style.opacity = 0;
+            this._srcPage.style.opacity = 1;
+            setTimeout(() => {
+              this._dstPage.style.opacity = 1;
+              this._srcPage.style.opacity = 0;
+              setTimeout(() => {
+                if (dst == this._dstPage) {
+                  this._stopAnimation();
+                }
+              }, this.duration);
+            }, 80);
+            break;
+          case "slide-from-right":
+            this._dstPage.style.transform = "translate3d(100%, 0, 0)";
+            setTimeout(() => {
+              this._dstPage.style.transform = "translate3d(0, 0, 0)";
+              setTimeout(() => {
+                if (dst == this._dstPage) {
+                  this._stopAnimation();
+                }
+              }, this.duration);
+            }, 80);
+            break;
+          case "slide-from-left":
+            this._dstPage.style.transform = "translate3d(-100%, 0, 0)";
+            setTimeout(() => {
+              this._dstPage.style.transform = "translate3d(0, 0, 0)";
+              setTimeout(() => {
+                if (dst == this._dstPage) {
+                  this._stopAnimation();
+                }
+              }, this.duration);
+            }, 80);
+            break;
+          case "slide-from-top":
+            this._dstPage.style.transform = "translate3d(0, -100%, 0)";
+            setTimeout(() => {
+              this._dstPage.style.transform = "translate3d(0, 0, 0)";
+              setTimeout(() => {
+                if (dst == this._dstPage) {
+                  this._stopAnimation();
+                }
+              }, this.duration);
+            }, 80);
+            break;
+          case "slide-from-bottom":
+            this._dstPage.style.transform = "translate3d(0, 100%, 0)";
+            setTimeout(() => {
+              this._dstPage.style.transform = "translate3d(0, 0, 0)";
+              setTimeout(() => {
+                if (dst == this._dstPage) {
+                  this._stopAnimation();
+                }
+              }, this.duration);
+            }, 80);
+            break;
+          case "shift-right":
+            this._dstPage.style.transform = "translate3d(-100%, 0, 0)";
+            this._srcPage.style.transform = "translate3d(0, 0, 0)";
+            setTimeout(() => {
+              this._dstPage.style.transform = "translate3d(0, 0, 0)";
+              this._srcPage.style.transform = "translate3d(100%, 0, 0)";
+              setTimeout(() => {
+                if (dst == this._dstPage) {
+                  this._stopAnimation();
+                }
+              }, this.duration);
+            }, 80);
+            break;
+          case "shift-left":
+            this._dstPage.style.transform = "translate3d(100%, 0, 0)";
+            this._srcPage.style.transform = "translate3d(0, 0, 0)";
+            setTimeout(() => {
+              this._dstPage.style.transform = "translate3d(0, 0, 0)";
+              this._srcPage.style.transform = "translate3d(-100%, 0, 0)";
+              setTimeout(() => {
+                if (dst == this._dstPage) {
+                  this._stopAnimation();
+                }
+              }, this.duration);
+            }, 80);
+            break;
+          case "shift-up":
+            this._dstPage.style.transform = "translate3d(0, 100%, 0)";
+            this._srcPage.style.transform = "translate3d(0, 0, 0)";
+            setTimeout(() => {
+              this._dstPage.style.transform = "translate3d(0, 0, 0)";
+              this._srcPage.style.transform = "translate3d(0, -100%, 0)";
+              setTimeout(() => {
+                if (dst == this._dstPage) {
+                  this._stopAnimation();
+                }
+              }, this.duration);
+            }, 80);
+            break;
+          case "shift-down":
+            this._dstPage.style.transform = "translate3d(0, -100%, 0)";
+            this._srcPage.style.transform = "translate3d(0, 0, 0)";
+            setTimeout(() => {
+              this._dstPage.style.transform = "translate3d(0, 0, 0)";
+              this._srcPage.style.transform = "translate3d(0, 100%, 0)";
+              setTimeout(() => {
+                if (dst == this._dstPage) {
+                  this._stopAnimation();
+                }
+              }, this.duration);
+            }, 80);
+            break;
+          default:
+            this._stopAnimation();
+            break;
+        }
+      }
+    }
+    window.customElements.define(SosoPages.is, SosoPages);
+  </script>
+</dom-module>

@@ -1,0 +1,161 @@
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../soso-pages.html">
+
+<dom-module id="demo-page">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment">
+      :host {
+        display: block;
+      }
+
+      .vertical.layout {
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+      }
+    </style>
+    <div class="vertical layout">
+      <div class="flex"></div>
+      <h1 class="flex">[[text]]</h1>
+      <p>
+        scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings
+        true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport
+        trueneedsSettings true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings true
+        scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings
+        true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport
+        trueneedsSettings true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings true
+        scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings
+        true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport
+        trueneedsSettings true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings true
+        scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings
+        true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport
+        trueneedsSettings true scopedSettingsSupport trueneedsSettings true scopedSettingsSupport trueneedsSettings true
+      </p>
+      <div class="flex"></div>
+    </div>
+  </template>
+  <script>
+    class DemoPage extends Polymer.Element {
+      static get is() { return 'demo-page'; }
+      static get properties() {
+        return {
+          text: String
+        };
+      }
+      connectedCallback() {
+        super.connectedCallback();
+        this.style.background = "rgb(" + Math.floor(Math.random() * 105 + 150) + "," + Math.floor(Math.random() * 105 + 150) + "," + Math.floor(Math.random() * 105 + 150) + ")";
+      }
+    }
+    window.customElements.define(DemoPage.is, DemoPage);
+  </script>
+</dom-module>
+
+<dom-module id="demo-pages">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment">
+      :host {
+        display: block;
+      }
+
+      .shell {
+        height: 100vh;
+      }
+
+      header {
+        padding: 16px;
+      }
+
+      .panel {
+        position: relative;
+      }
+
+      button {}
+
+      soso-pages {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: block;
+      }
+    </style>
+    <div class="shell vertical layout">
+      <header>
+        <button on-click="sfBottom">Slide from bottom</button>
+        <button on-click="sfTop">Slide from top</button>
+        <button on-click="sfLeft">Slide from left</button>
+        <button on-click="sfRight">Slide from right</button>
+        <button on-click="dissolve">Dissolve</button>
+        <button on-click="zout">Zoom out</button>
+        <button on-click="zin">Zoom in</button>
+        <button on-click="sRight">Shift right</button>
+        <button on-click="sLeft">Shift left</button>
+        <button on-click="sUp">Shift up</button>
+        <button on-click="sDown">Shift down</button>
+      </header>
+      <div class="flex panel">
+        <soso-pages id="pages">
+          <demo-page name="one" text="Page One"></demo-page>
+          <demo-page name="two" text="Page Two"></demo-page>
+        </soso-pages>
+      </div>
+    </div>
+  </template>
+  <script>
+    class DemoPages extends Polymer.Element {
+      static get is() { return 'demo-pages'; }
+
+      sRight() {
+        this.$.pages.animation = "shift-right";
+        this.toggle();
+      }
+      sLeft() {
+        this.$.pages.animation = "shift-left";
+        this.toggle();
+      }
+      sUp() {
+        this.$.pages.animation = "shift-up";
+        this.toggle();
+      }
+      sDown() {
+        this.$.pages.animation = "shift-down";
+        this.toggle();
+      }
+      zout() {
+        this.$.pages.animation = "zoom-out";
+        this.toggle();
+      }
+      zin() {
+        this.$.pages.animation = "zoom-in";
+        this.toggle();
+      }
+      dissolve() {
+        this.$.pages.animation = "dissolve";
+        this.toggle();
+      }
+      sfLeft() {
+        this.$.pages.animation = "slide-from-left";
+        this.toggle();
+      }
+      sfRight() {
+        this.$.pages.animation = "slide-from-right";
+        this.toggle();
+      }
+      sfBottom() {
+        this.$.pages.animation = "slide-from-bottom";
+        this.toggle();
+      }
+      sfTop() {
+        this.$.pages.animation = "slide-from-top";
+        this.toggle();
+      }
+
+      toggle() {
+        this.$.pages.selectedIndex = this.$.pages.selectedIndex ? 0 : 1;
+      }
+    }
+    window.customElements.define(DemoPages.is, DemoPages);
+  </script>
+</dom-module>

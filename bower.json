@@ -1,0 +1,30 @@
+{
+  "name": "soso-pages",
+  "description": "Simple content switcher. Select one of this element&#39;s children to show. Also, animates the transition",
+  "main": "soso-pages.html",
+  "license": "MIT",
+  "demos": {
+    "Demo": "demo/index.html"
+  },
+  "authors": [
+    "Preet Shihn"
+  ],
+  "keywords": [
+    "web-components",
+    "web-component",
+    "polymer",
+    "page transition",
+    "page animation",
+    "animated transition"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0"
+  },
+  "devDependencies": {
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0"
+  }
+}

@@ -35,10 +35,10 @@
       static get is() { return 'soso-pages'; }
       static get properties() {
         return {
-          selected: String,
           selectedIndex: {
             type: Number,
             value: 0,
+            notify: true,
             observer: '_setPage'
           },
           duration: {

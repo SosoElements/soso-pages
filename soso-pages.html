@@ -38,7 +38,6 @@
           selectedIndex: {
             type: Number,
             value: 0,
-            notify: true,
             observer: '_setPage'
           },
           duration: {
@@ -50,6 +49,10 @@
             value: "none"
           }
         };
+      }
+
+      get currentPage() {
+        return this._currentPage;
       }
 
       _setPage() {

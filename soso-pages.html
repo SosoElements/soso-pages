@@ -47,6 +47,10 @@
           animation: {
             type: String,
             value: "none"
+          },
+          disableScrollBlock: {
+            type: Boolean,
+            value: false
           }
         };
       }
@@ -83,7 +87,9 @@
       }
 
       _startAnimating(srcPage, dstPage) {
-        document.body.style.overflow = "hidden";
+        if (!this.disableScrollBlock) {
+          document.body.style.overflow = "hidden";
+        }
         this._srcPage = srcPage;
         this._dstPage = dstPage;
         this._dstPage.style.zIndex = 1;
@@ -105,11 +111,13 @@
         this._srcPage.style.transform = "none";
         this._dstPage.style.opacity = 1;
         this._srcPage.style.opacity = 1;
-        setTimeout(() => {
-          if (!this._animating) {
-            document.body.style.overflow = "";
-          }
-        });
+        if (!this.disableScrollBlock) {
+          setTimeout(() => {
+            if (!this._animating) {
+              document.body.style.overflow = "";
+            }
+          });
+        }
       }
 
       _animate() {

@@ -88,7 +88,7 @@
 
       _startAnimating(srcPage, dstPage) {
         if (!this.disableScrollBlock) {
-          document.body.style.overflow = "hidden";
+          document.documentElement.style.overflow = "hidden";
         }
         this._srcPage = srcPage;
         this._dstPage = dstPage;
@@ -104,7 +104,7 @@
       }
 
       _stopAnimation() {
-        this._animating = true;
+        this._animating = false;
         this._dstPage.style.zIndex = 0;
         this._srcPage.classList.add("hidden");
         this._dstPage.style.transform = "none";
@@ -114,7 +114,7 @@
         if (!this.disableScrollBlock) {
           setTimeout(() => {
             if (!this._animating) {
-              document.body.style.overflow = "";
+              document.documentElement.style.overflow = "";
             }
           });
         }
